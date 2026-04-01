@@ -1,0 +1,40 @@
+spec_version: 1
+name: college_env
+type: space
+runtime: fastapi
+app: server.app:app
+port: 8000
+
+display_name: "College Admission Counselling Environment"
+description: >
+  Simulates India's JEE/CUET college admission counselling process (JOSAA/CSAB).
+  The AI agent helps students navigate seat allotment, strategic upgrades, fee payment,
+  and strict deadlines. 1.5 million+ Indian students face this every year.
+  3 tasks: Easy (seat acceptance), Medium (upgrade decision), Hard (multi-round counselling).
+
+tags:
+  - openenv
+  - india
+  - education
+  - real-world
+  - counselling
+  - reinforcement-learning
+
+tasks:
+  - id: 1
+    name: Simple Seat Acceptance
+    difficulty: easy
+    max_steps: 6
+    description: Accept a clear allotment before the 3-day deadline
+
+  - id: 2
+    name: Strategic Upgrade Decision
+    difficulty: medium
+    max_steps: 10
+    description: Navigate an upgrade opportunity across 2 counselling rounds
+
+  - id: 3
+    name: Multi-Round Complex Counselling
+    difficulty: hard
+    max_steps: 15
+    description: Full multi-round counselling — challenges even frontier LLMs

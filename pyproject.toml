@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openenv-college_env"
+version = "0.1.0"
+description = "College Admission Counselling Environment for OpenEnv"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "openenv-core[core]>=0.2.1",
+    "gradio>=5.0.0,<7.0.0",
+    "openai>=1.0.0",
+    "groq>=0.9.0",
+    "python-dotenv>=1.0.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.24.0",
+    "pillow>=10.0.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
+[project.scripts]
+server = "college_env.server.app:main"
+
+[tool.setuptools]
+include-package-data = true
+packages = ["college_env", "college_env.server"]
+package-dir = { "college_env" = ".", "college_env.server" = "server" }

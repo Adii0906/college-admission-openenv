@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+uv.lock
+*.egg-info/
+baseline_results.json
