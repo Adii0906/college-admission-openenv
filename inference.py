@@ -31,19 +31,24 @@ from openai import OpenAI  # Same client works for Groq, HF, and OpenAI
 # ── Mandatory variables (from environment config) ──────────────────────────────
 API_BASE_URL = os.getenv("API_BASE_URL", "https://api.groq.com/openai/v1")
 MODEL_NAME   = os.getenv("MODEL_NAME",   "llama-3.1-8b-instant")
-HF_TOKEN     = os.getenv("HF_TOKEN") or os.getenv("GROQ_API_KEY") or os.getenv("API_KEY")
 
-if not HF_TOKEN:
-    print("ERROR: Set HF_TOKEN (or GROQ_API_KEY) environment variable")
-    print("  Windows: set HF_TOKEN=your_key_here")
-    print("  Mac/Linux: export HF_TOKEN=your_key_here")
-    print("  Get free Groq key: console.groq.com")
+# Prefer GROQ API key for Groq endpoint; fallback to HF token, OpenAI key or generic API_KEY
+API_KEY = (os.getenv("GROQ_API_KEY") or os.getenv("HF_TOKEN") or
+           os.getenv("OPENAI_API_KEY") or os.getenv("API_KEY"))
+
+if not API_KEY:
+    print("ERROR: Set one of GROQ_API_KEY, HF_TOKEN, OPENAI_API_KEY, or API_KEY environment variables")
+    print("  Windows: set GROQ_API_KEY=your_key_here")
+    print("  Mac/Linux: export GROQ_API_KEY=your_key_here")
     sys.exit(1)
+
+source = "GROQ_API_KEY" if os.getenv("GROQ_API_KEY") else "HF_TOKEN" if os.getenv("HF_TOKEN") else "OPENAI_API_KEY" if os.getenv("OPENAI_API_KEY") else "API_KEY"
+print(f"Using token from {source}, API_BASE_URL={API_BASE_URL}, MODEL_NAME={MODEL_NAME}")
 
 # ── OpenAI client (works with Groq/HF/OpenAI — same interface) ────────────────
 client = OpenAI(
     base_url=API_BASE_URL,
-    api_key=HF_TOKEN,
+    api_key=API_KEY,
 )
 
 # ── Import environment ─────────────────────────────────────────────────────────
