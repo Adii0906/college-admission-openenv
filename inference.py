@@ -23,6 +23,8 @@ import time
 import textwrap
 from pathlib import Path
 from typing import List, Dict
+from dotenv import load_dotenv
+load_dotenv()
 
 from openai import OpenAI  # Same client works for Groq, HF, and OpenAI
 

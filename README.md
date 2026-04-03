@@ -21,26 +21,17 @@ tags:
 [![OpenEnv](https://img.shields.io/badge/OpenEnv-compatible-purple)](https://github.com/meta-pytorch/OpenEnv)
 
 Simulates India's **JEE/CUET college admission counselling** (JOSAA/CSAB style).
+1.5 million+ students face this every year. Wrong decisions cost students their dream college.
 
-## Architecture
-
-```
-HF Space
-├── Gradio UI     → port 7860  (main, judges interact here)
-└── FastAPI/OpenEnv → port 8000  (background, handles /reset /step /state)
-```
-
-Gradio calls FastAPI via HTTP. Both run in the same process.
-
-## API Endpoints (port 8000)
+## API Endpoints (port 7860 — same as Gradio UI)
 
 ```
-POST /reset        Start new episode
-POST /step         Take action
-GET  /state        Current state
-GET  /health       Health check → 200
-GET  /docs         Interactive API docs
-GET  /schema       Action/Observation schemas
+POST /reset     Start new episode → returns observation
+POST /step      Take action → returns observation + reward + done
+GET  /state     Current episode state
+GET  /health    Health check → {"status": "ok"}
+GET  /schema    Action + Observation schemas
+GET  /docs      Swagger API docs
 ```
 
 ## Step payload format
@@ -48,59 +39,66 @@ GET  /schema       Action/Observation schemas
 ```json
 POST /step
 {"action": {"action": "check_status", "target_college": null, "round_number": 1}}
+
+or flat format:
+{"action": "check_status"}
+```
+
+## Quick test
+
+```bash
+# Reset
+curl -X POST https://Knight09-college-admission-env.hf.space/reset
+
+# Step
+curl -X POST https://Knight09-college-admission-env.hf.space/step \
+  -H "Content-Type: application/json" \
+  -d '{"action": "check_status"}'
 ```
 
 ## Action Space
 
 | Action | Reward | Description |
 |--------|--------|-------------|
-| `check_status` | +0.3 | View allotment and deadline |
-| `check_cutoffs` | +0.5 | See eligible colleges by rank |
-| `fill_choices` | +1.0 | Submit preference list |
-| `accept_allotment` | +2.0 | Accept the college seat |
-| `upgrade_request` | +3.0 | Request better college |
+| `check_status` | +0.3 | View allotment and steps left |
+| `check_cutoffs` | +0.5 | Check eligible colleges by rank |
+| `fill_choices` | +1.0 | Submit college preference list |
+| `accept_allotment` | +2.0 | Accept the allotted college |
+| `upgrade_request` | +3.0 | Request upgrade to better college |
 | `pay_seat_fee` | +2.0 | Pay fee to secure seat |
 | `report_to_college` | +3.0 | Final step — done! |
 | `withdraw` | **−10.0** | IRREVERSIBLE — avoid! |
 
 ## 3 Tasks
 
-| Task | Difficulty | Max Steps | Perfect Score |
-|------|-----------|-----------|---------------|
-| 1 — Simple Seat Acceptance | Easy | 8 | 1.000 |
-| 2 — Strategic Upgrade | Medium | 10 | 1.000 |
-| 3 — Multi-Round Counselling | Hard | 15 | 0.900+ |
+| # | Difficulty | Description | Max Steps |
+|---|-----------|-------------|-----------|
+| 1 | Easy | Accept NIT Warangal CS before deadline | 8 |
+| 2 | Medium | Upgrade IIT Kharagpur → IIT Madras CS | 10 |
+| 3 | Hard | Multi-round: get IIT Bombay CS | 15 |
+
+## Baseline Scores (Llama 3.1-8B via Groq)
+
+| Task | Difficulty | Score |
+|------|-----------|-------|
+| 1 | Easy | TBD |
+| 2 | Medium | TBD |
+| 3 | Hard | TBD |
+
+Run `python inference.py` to reproduce.
 
 ## Setup
 
 ```bash
-# Set secrets in HF Space Settings
+pip install "gradio>=5.0.0" openenv-core openai groq requests python-dotenv
+
+# HF Space secrets
 API_BASE_URL = https://api.groq.com/openai/v1
 MODEL_NAME   = llama-3.1-8b-instant
-HF_TOKEN     = your_groq_api_key_here
+HF_TOKEN     = your_groq_key
 
-# Local run
-pip install "gradio>=5.0.0" openenv-core openai groq requests python-dotenv
-python app.py
-
-# Run inference baseline
-python inference.py
-```
-
-## Use via Python client
-
-```python
-import requests
-
-# Reset
-obs = requests.post("https://Knight09-college-admission-env.hf.space/reset").json()
-
-# Step
-result = requests.post(
-    "https://Knight09-college-admission-env.hf.space/step",
-    json={"action": {"action": "check_status", "target_college": None, "round_number": 1}}
-).json()
-print(result["reward"], result["done"])
+python app.py        # Starts on localhost:7860
+python inference.py  # Baseline evaluation
 ```
 
 *Built for India's first OpenEnv Hackathon — Meta + Hugging Face.*
