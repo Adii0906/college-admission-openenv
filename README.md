@@ -92,7 +92,7 @@ Run `python inference.py` to reproduce.
 ```bash
 pip install "gradio>=5.0.0" openenv-core openai groq requests python-dotenv
 
-# HF Space secrets
+# HF Space secrets Currently uing GROQ free api key you can replace with openai key just go to inference.py and uncomment the openai client part
 API_BASE_URL = https://api.groq.com/openai/v1
 MODEL_NAME   = llama-3.1-8b-instant
 HF_TOKEN     = your_groq_key
