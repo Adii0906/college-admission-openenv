@@ -36,4 +36,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
 EXPOSE 7860
 
 # Run the combined FastAPI+Gradio app on port 7860
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860", "--log-level", "info"]
+CMD ["python", "-c", "from app import demo; demo.launch(server_name='0.0.0.0', server_port=7860)"]
