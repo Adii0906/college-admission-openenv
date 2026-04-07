@@ -20,6 +20,11 @@ from openenv.core.env_server.types import Action, Observation
 from pydantic import Field
 from typing import Literal, List, Optional
 
+try:
+    from .tasks import MIN_SCORE
+except ImportError:
+    from tasks import MIN_SCORE
+
 
 class CollegeAction(Action):
     """
@@ -143,6 +148,8 @@ class CollegeObservation(Observation):
     )
 
     task_score: float = Field(
-        default=0.0,
-        description="Current task completion score between 0.0 (failed) and 1.0 (perfect)."
+        default=MIN_SCORE,
+        gt=0.0,
+        lt=1.0,
+        description="Current task completion score strictly between 0 and 1."
     )

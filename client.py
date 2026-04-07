@@ -13,6 +13,7 @@ from openenv.core.client_types import StepResult
 from openenv.core.env_server.types import State
 
 from .models import CollegeAction, CollegeObservation
+from .tasks import MIN_SCORE
 
 
 class CollegeEnv(
@@ -72,7 +73,7 @@ class CollegeEnv(
             steps_taken=obs_data.get("steps_taken", 0),
             reward=payload.get("reward", 0.0),
             done=payload.get("done", False),
-            task_score=obs_data.get("task_score", 0.0),
+            task_score=obs_data.get("task_score", MIN_SCORE),
             message=obs_data.get("message", ""),
         )
         return StepResult(
