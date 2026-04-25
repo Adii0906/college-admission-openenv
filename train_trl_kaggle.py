@@ -4,7 +4,7 @@ Kaggle/Colab-ready TRL training script for College Admission OpenEnv.
 What this script does:
 1) Connects to the College Admission environment over HTTP (/reset, /step, /health).
 2) Builds an expert demonstration dataset from scripted trajectories.
-3) Fine-tunes a small model using Hugging Face TRL (SFT + QLoRA, T4-friendly).
+3) Fine-tunes Qwen2.5 (1.5B class) with Unsloth + TRL (SFT + QLoRA, T4-friendly).
 4) Compares:
    - Random policy baseline
    - Untrained model baseline
@@ -14,12 +14,13 @@ What this script does:
    - Episode return vs episode index
    - Mean task score comparison
 6) Optionally pushes artifacts/model to HF Hub and uploads a simple dashboard HF Space.
+7) Supports Weights & Biases experiment tracking.
 
 Recommended install cell (Kaggle/Colab):
-pip install -q "transformers>=4.46.0" "trl>=0.11.0" "peft>=0.13.0" \
-               "accelerate>=0.34.0" "bitsandbytes>=0.43.0" "datasets>=2.20.0" \
-               "huggingface_hub>=0.25.0" "pandas>=2.1.0" "matplotlib>=3.8.0" \
-               "requests>=2.31.0"
+pip install -q "unsloth>=2025.1.0" "transformers>=4.46.0" "trl>=0.11.0" \
+               "peft>=0.13.0" "accelerate>=0.34.0" "bitsandbytes>=0.43.0" \
+               "datasets>=2.20.0" "huggingface_hub>=0.25.0" "pandas>=2.1.0" \
+               "matplotlib>=3.8.0" "requests>=2.31.0" "wandb>=0.17.0"
 """
 
 from __future__ import annotations
@@ -41,15 +42,24 @@ import requests
 import torch
 from datasets import Dataset
 from huggingface_hub import HfApi, create_repo, login
-from peft import LoraConfig, prepare_model_for_kbit_training
+from peft import LoraConfig
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
-    BitsAndBytesConfig,
     TrainingArguments,
     set_seed,
 )
 from trl import SFTTrainer
+
+try:
+    from unsloth import FastLanguageModel, is_bfloat16_supported
+    UNSLOTH_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    FastLanguageModel = None  # type: ignore[assignment]
+    UNSLOTH_AVAILABLE = False
+
+    def is_bfloat16_supported() -> bool:
+        return bool(torch.cuda.is_available() and torch.cuda.is_bf16_supported())
 
 
 @dataclass
@@ -63,16 +73,21 @@ class Config:
     request_retries: int = int(os.getenv("REQUEST_RETRIES", "3"))
 
     # Model/Training
-    base_model_name: str = os.getenv("BASE_MODEL_NAME", "Qwen/Qwen2.5-0.5B-Instruct")
-    output_dir: str = os.getenv("OUTPUT_DIR", "./trl_runs/college_env_qwen25_05b")
+    base_model_name: str = os.getenv("BASE_MODEL_NAME", "unsloth/Qwen2.5-1.5B-Instruct-bnb-4bit")
+    output_dir: str = os.getenv("OUTPUT_DIR", "./trl_runs/college_env_qwen25_15b_unsloth")
     max_seq_length: int = int(os.getenv("MAX_SEQ_LENGTH", "512"))
     train_episodes_per_template: int = int(os.getenv("TRAIN_EPISODES_PER_TEMPLATE", "110"))
     max_train_steps: int = int(os.getenv("MAX_TRAIN_STEPS", "600"))
     learning_rate: float = float(os.getenv("LEARNING_RATE", "2e-4"))
-    train_batch_size: int = int(os.getenv("TRAIN_BATCH_SIZE", "8"))
-    grad_accum_steps: int = int(os.getenv("GRAD_ACCUM_STEPS", "4"))
+    train_batch_size: int = int(os.getenv("TRAIN_BATCH_SIZE", "2"))
+    grad_accum_steps: int = int(os.getenv("GRAD_ACCUM_STEPS", "8"))
     eval_episodes_per_task: int = int(os.getenv("EVAL_EPISODES_PER_TASK", "12"))
     seed: int = int(os.getenv("SEED", "42"))
+    use_wandb: bool = os.getenv("USE_WANDB", "1") == "1"
+    wandb_project: str = os.getenv("WANDB_PROJECT", "college-admission-openenv")
+    wandb_entity: str = os.getenv("WANDB_ENTITY", "")
+    wandb_run_name: str = os.getenv("WANDB_RUN_NAME", "qwen25_15b_unsloth_trl")
+    wandb_api_key: str = os.getenv("WANDB_API_KEY", "")
 
     # HF Hub / Space
     push_to_hub: bool = os.getenv("PUSH_TO_HUB", "0") == "1"
@@ -395,27 +410,139 @@ def infer_lora_targets(model: AutoModelForCausalLM) -> List[str]:
     return ["q_proj", "v_proj"]
 
 
-def load_quantized_model_and_tokenizer(model_name: str) -> Tuple[AutoModelForCausalLM, AutoTokenizer]:
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.float16,
-        bnb_4bit_use_double_quant=True,
-    )
-    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+def setup_wandb(cfg: Config) -> List[str]:
+    if not cfg.use_wandb:
+        return []
+    os.environ["WANDB_PROJECT"] = cfg.wandb_project
+    if cfg.wandb_entity:
+        os.environ["WANDB_ENTITY"] = cfg.wandb_entity
+    if cfg.wandb_run_name:
+        os.environ["WANDB_NAME"] = cfg.wandb_run_name
+    try:
+        import wandb
+        if cfg.wandb_api_key:
+            wandb.login(key=cfg.wandb_api_key)
+        print(
+            f"[W&B] Enabled project={os.environ.get('WANDB_PROJECT', '')} "
+            f"run_name={os.environ.get('WANDB_NAME', '')}"
+        )
+        return ["wandb"]
+    except Exception as exc:  # noqa: BLE001
+        print(f"[W&B] Could not initialize wandb ({exc}). Continuing without W&B logging.")
+        return []
+
+
+def load_model_and_tokenizer(model_name: str, max_seq_length: int) -> Tuple[AutoModelForCausalLM, AutoTokenizer, str]:
+    effective_model_name = model_name
+    if (not torch.cuda.is_available() or not UNSLOTH_AVAILABLE) and model_name.startswith("unsloth/"):
+        effective_model_name = model_name.replace("unsloth/", "").replace("-bnb-4bit", "")
+        print(
+            f"[INFO] Using fallback model '{effective_model_name}' "
+            f"because Unsloth 4-bit runtime is unavailable."
+        )
+    if UNSLOTH_AVAILABLE and torch.cuda.is_available():
+        model, tokenizer = FastLanguageModel.from_pretrained(
+            model_name=model_name,
+            max_seq_length=max_seq_length,
+            dtype=None,
+            load_in_4bit=True,
+        )
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        model.config.use_cache = False
+        return model, tokenizer, "unsloth_4bit"
+
+    tokenizer = AutoTokenizer.from_pretrained(effective_model_name, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        quantization_config=bnb_config,
-        torch_dtype=torch.float16,
-        device_map="auto",
-        trust_remote_code=True,
-    )
+    model_kwargs: Dict[str, Any] = {"trust_remote_code": True}
+    backend = "transformers_cpu"
+    if torch.cuda.is_available():
+        model_kwargs["torch_dtype"] = torch.float16
+        model_kwargs["device_map"] = "auto"
+        try:
+            from transformers import BitsAndBytesConfig
+
+            model_kwargs["quantization_config"] = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.float16,
+                bnb_4bit_use_double_quant=True,
+            )
+            backend = "transformers_4bit"
+        except Exception as exc:  # noqa: BLE001
+            backend = "transformers_fp16"
+            print(f"[WARN] BitsAndBytes 4-bit unavailable ({exc}); continuing with fp16 weights.")
+    else:
+        model_kwargs["torch_dtype"] = torch.float32
+        model_kwargs["device_map"] = None
+
+    model = AutoModelForCausalLM.from_pretrained(effective_model_name, **model_kwargs)
     model.config.use_cache = False
-    model = prepare_model_for_kbit_training(model)
-    return model, tokenizer
+    return model, tokenizer, backend
+
+
+def prepare_model_for_training(
+    model: AutoModelForCausalLM,
+    lora_targets: List[str],
+    seed: int,
+    backend: str,
+) -> Tuple[AutoModelForCausalLM, Optional[LoraConfig]]:
+    if backend == "unsloth_4bit" and UNSLOTH_AVAILABLE:
+        model = FastLanguageModel.get_peft_model(
+            model,
+            r=16,
+            lora_alpha=32,
+            lora_dropout=0.05,
+            bias="none",
+            target_modules=lora_targets,
+            use_gradient_checkpointing="unsloth",
+            random_state=seed,
+        )
+        return model, None
+
+    peft_config = LoraConfig(
+        r=16,
+        lora_alpha=32,
+        lora_dropout=0.05,
+        bias="none",
+        task_type="CAUSAL_LM",
+        target_modules=lora_targets,
+    )
+    return model, peft_config
+
+
+def build_training_arguments(cfg: Config, out_dir: Path, report_to: List[str]) -> TrainingArguments:
+    use_cuda = torch.cuda.is_available()
+    use_bf16 = bool(use_cuda and is_bfloat16_supported())
+    train_kwargs: Dict[str, Any] = {
+        "output_dir": str(out_dir),
+        "max_steps": cfg.max_train_steps,
+        "per_device_train_batch_size": cfg.train_batch_size,
+        "per_device_eval_batch_size": cfg.train_batch_size,
+        "gradient_accumulation_steps": cfg.grad_accum_steps,
+        "learning_rate": cfg.learning_rate,
+        "lr_scheduler_type": "cosine",
+        "warmup_ratio": 0.05,
+        "fp16": bool(use_cuda and not use_bf16),
+        "bf16": bool(use_cuda and use_bf16),
+        "logging_steps": 10,
+        "eval_steps": 100,
+        "save_steps": 100,
+        "save_total_limit": 2,
+        "gradient_checkpointing": True,
+        "optim": "adamw_8bit" if use_cuda else "adamw_torch",
+        "report_to": report_to,
+        "run_name": cfg.wandb_run_name if report_to else None,
+        "seed": cfg.seed,
+    }
+    for eval_arg_name in ("evaluation_strategy", "eval_strategy"):
+        try:
+            return TrainingArguments(**train_kwargs, **{eval_arg_name: "steps"})
+        except TypeError:
+            continue
+    return TrainingArguments(**train_kwargs)
 
 
 def parse_action_text(raw_text: str, obs: Dict[str, Any]) -> Dict[str, Any]:
@@ -467,6 +594,11 @@ def build_model_policy(
     do_sample: bool = False,
     temperature: float = 0.2,
 ) -> Callable[[Dict[str, Any], List[Dict[str, Any]]], Dict[str, Any]]:
+    if UNSLOTH_AVAILABLE:
+        try:
+            FastLanguageModel.for_inference(model)
+        except Exception:  # noqa: BLE001
+            pass
     def _policy(obs: Dict[str, Any], history: List[Dict[str, Any]]) -> Dict[str, Any]:
         messages = [
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -480,16 +612,20 @@ def build_model_policy(
         device = next(model.parameters()).device
         inputs = tokenizer(prompt, return_tensors="pt")
         inputs = {k: v.to(device) for k, v in inputs.items()}
+        generation_kwargs: Dict[str, Any] = {
+            "max_new_tokens": 96,
+            "do_sample": do_sample,
+            "pad_token_id": tokenizer.pad_token_id,
+            "eos_token_id": tokenizer.eos_token_id,
+        }
+        if do_sample:
+            generation_kwargs["temperature"] = temperature
+            generation_kwargs["top_p"] = 0.9
 
         with torch.no_grad():
             output_ids = model.generate(
                 **inputs,
-                max_new_tokens=96,
-                do_sample=do_sample,
-                temperature=temperature if do_sample else None,
-                top_p=0.9 if do_sample else None,
-                pad_token_id=tokenizer.pad_token_id,
-                eos_token_id=tokenizer.eos_token_id,
+                **generation_kwargs,
             )
         new_tokens = output_ids[0, inputs["input_ids"].shape[-1]:]
         raw_text = tokenizer.decode(new_tokens, skip_special_tokens=True)
@@ -823,10 +959,12 @@ def main() -> None:
     demo_df.to_csv(demo_csv, index=False)
 
     # 2) Load base model/tokenizer
-    print("\n[2/7] Loading quantized base model + tokenizer ...")
-    model, tokenizer = load_quantized_model_and_tokenizer(CFG.base_model_name)
+    print("\n[2/7] Loading base model + tokenizer ...")
+    model, tokenizer, model_backend = load_model_and_tokenizer(CFG.base_model_name, CFG.max_seq_length)
+    print(f"Model backend: {model_backend}")
     lora_targets = infer_lora_targets(model)
     print(f"LoRA target modules: {lora_targets}")
+    report_to = setup_wandb(CFG)
 
     # 3) Create SFT datasets
     print("\n[3/7] Building TRL datasets ...")
@@ -851,48 +989,26 @@ def main() -> None:
 
     # 5) Train with TRL SFT + QLoRA
     print("\n[5/7] Training TRL SFT model ...")
-    peft_config = LoraConfig(
-        r=16,
-        lora_alpha=32,
-        lora_dropout=0.05,
-        bias="none",
-        task_type="CAUSAL_LM",
-        target_modules=lora_targets,
-    )
-
-    training_args = TrainingArguments(
-        output_dir=str(out_dir),
-        max_steps=CFG.max_train_steps,
-        per_device_train_batch_size=CFG.train_batch_size,
-        per_device_eval_batch_size=CFG.train_batch_size,
-        gradient_accumulation_steps=CFG.grad_accum_steps,
-        learning_rate=CFG.learning_rate,
-        lr_scheduler_type="cosine",
-        warmup_ratio=0.05,
-        fp16=True,
-        bf16=False,
-        logging_steps=10,
-        evaluation_strategy="steps",
-        eval_steps=100,
-        save_steps=100,
-        save_total_limit=2,
-        gradient_checkpointing=True,
-        optim="paged_adamw_8bit",
-        report_to=[],
-        seed=CFG.seed,
-    )
-
-    trainer = SFTTrainer(
+    model_for_training, peft_config = prepare_model_for_training(
         model=model,
-        train_dataset=train_ds,
-        eval_dataset=eval_ds,
-        tokenizer=tokenizer,
-        peft_config=peft_config,
-        args=training_args,
-        dataset_text_field="text",
-        max_seq_length=CFG.max_seq_length,
-        packing=True,
+        lora_targets=lora_targets,
+        seed=CFG.seed,
+        backend=model_backend,
     )
+    training_args = build_training_arguments(CFG, out_dir, report_to)
+    trainer_kwargs: Dict[str, Any] = {
+        "model": model_for_training,
+        "train_dataset": train_ds,
+        "eval_dataset": eval_ds,
+        "tokenizer": tokenizer,
+        "args": training_args,
+        "dataset_text_field": "text",
+        "max_seq_length": CFG.max_seq_length,
+        "packing": True,
+    }
+    if peft_config is not None:
+        trainer_kwargs["peft_config"] = peft_config
+    trainer = SFTTrainer(**trainer_kwargs)
     train_result = trainer.train()
     trainer.save_model(str(out_dir / "final_adapter"))
     tokenizer.save_pretrained(str(out_dir / "final_adapter"))
