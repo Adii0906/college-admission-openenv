@@ -1,0 +1,37 @@
+=== Random baseline (task 3, first episode) ===
+step=01 action=check_cutoffs      target=None reward=+0.50 score=0.250
+step=02 action=withdraw           target=None reward=-10.00 score=0.001
+
+=== Untrained model (task 3, first episode) ===
+step=01 action=check_status       target=None reward=+0.30 score=0.250
+step=02 action=check_status       target=None reward=+0.30 score=0.250
+step=03 action=check_status       target=None reward=+0.30 score=0.250
+step=04 action=check_status       target=None reward=+0.30 score=0.250
+step=05 action=check_status       target=None reward=+0.30 score=0.250
+step=06 action=check_status       target=None reward=+0.30 score=0.250
+step=07 action=check_status       target=None reward=+0.30 score=0.250
+step=08 action=check_status       target=None reward=+0.30 score=0.250
+step=09 action=check_status       target=None reward=+0.30 score=0.250
+step=10 action=check_status       target=None reward=+0.30 score=0.250
+step=11 action=check_status       target=None reward=+0.30 score=0.250
+step=12 action=check_status       target=None reward=+0.30 score=0.250
+step=13 action=check_status       target=None reward=+0.30 score=0.250
+step=14 action=check_status       target=None reward=+0.30 score=0.250
+step=15 action=check_status       target=None reward=+0.30 score=0.250
+
+=== Trained model (task 3, first episode) ===
+step=01 action=check_status       target=None reward=+0.30 score=0.250
+step=02 action=check_status       target=None reward=+0.30 score=0.250
+step=03 action=check_status       target=None reward=+0.30 score=0.250
+step=04 action=check_status       target=None reward=+0.30 score=0.250
+step=05 action=check_status       target=None reward=+0.30 score=0.250
+step=06 action=check_status       target=None reward=+0.30 score=0.250
+step=07 action=check_status       target=None reward=+0.30 score=0.250
+step=08 action=check_status       target=None reward=+0.30 score=0.250
+step=09 action=check_status       target=None reward=+0.30 score=0.250
+step=10 action=check_status       target=None reward=+0.30 score=0.250
+step=11 action=check_status       target=None reward=+0.30 score=0.250
+step=12 action=check_status       target=None reward=+0.30 score=0.250
+step=13 action=check_status       target=None reward=+0.30 score=0.250
+step=14 action=check_status       target=None reward=+0.30 score=0.250
+step=15 action=check_status       target=None reward=+0.30 score=0.250

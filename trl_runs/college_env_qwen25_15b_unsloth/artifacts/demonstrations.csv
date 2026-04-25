@@ -1,0 +1,421 @@
+task_id,template_idx,episode_idx,prompt,response
+1,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 4500, ""student_category"": ""OBC"", ""current_round"": 1, ""allotted_college"": ""NIT Warangal CS"", ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 6, ""available_upgrades"": [], ""steps_taken"": 0, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""[Task 1 — EASY] Rahul has JEE rank 4500 (OBC category). He has been allotted NIT Warangal CS in Round 1. He must accept the seat, pay the fee, and report to college before the 3-day deadline. No upgrade is available. | Rank: 4500 (OBC) | Allotment: NIT Warangal CS | Steps allowed: 6. Hint: First check your allotment status""}
+
+Recent actions (oldest -> newest, JSON array):
+[]
+
+Return the best next action as strict JSON only.","{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}"
+1,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""Round 1 | Allotted: None | Fee paid: No | Steps left: 7.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}"
+1,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}"
+1,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: Cannot pay fee without an allotment!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""report_to_college"", ""target_college"": null, ""round_number"": 1}"
+1,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 4500, ""student_category"": ""OBC"", ""current_round"": 1, ""allotted_college"": ""NIT Warangal CS"", ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 6, ""available_upgrades"": [], ""steps_taken"": 0, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""[Task 1 — EASY] Rahul has JEE rank 4500 (OBC category). He has been allotted NIT Warangal CS in Round 1. He must accept the seat, pay the fee, and report to college before the 3-day deadline. No upgrade is available. | Rank: 4500 (OBC) | Allotment: NIT Warangal CS | Steps allowed: 6. Hint: First check your allotment status""}
+
+Recent actions (oldest -> newest, JSON array):
+[]
+
+Return the best next action as strict JSON only.","{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}"
+1,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""You qualify for 11 colleges. Best: IIT Bombay CS. Your rank 0 (GENERAL).""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}"
+1,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""Round 1 | Allotted: None | Fee paid: No | Steps left: 7.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}"
+1,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}"
+1,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: Cannot pay fee without an allotment!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""report_to_college"", ""target_college"": null, ""round_number"": 1}"
+1,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 4500, ""student_category"": ""OBC"", ""current_round"": 1, ""allotted_college"": ""NIT Warangal CS"", ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 6, ""available_upgrades"": [], ""steps_taken"": 0, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""[Task 1 — EASY] Rahul has JEE rank 4500 (OBC category). He has been allotted NIT Warangal CS in Round 1. He must accept the seat, pay the fee, and report to college before the 3-day deadline. No upgrade is available. | Rank: 4500 (OBC) | Allotment: NIT Warangal CS | Steps allowed: 6. Hint: First check your allotment status""}
+
+Recent actions (oldest -> newest, JSON array):
+[]
+
+Return the best next action as strict JSON only.","{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}"
+1,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""Round 1 | Allotted: None | Fee paid: No | Steps left: 7.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}"
+1,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}"
+1,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""Round 1 | Allotted: None | Fee paid: No | Steps left: 7.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}"
+1,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: Cannot pay fee without an allotment!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""report_to_college"", ""target_college"": null, ""round_number"": 1}"
+2,0,0,"Environment state (JSON):
+{""task_id"": 2, ""student_rank"": 1300, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": ""IIT Kharagpur CS"", ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 10, ""available_upgrades"": [], ""steps_taken"": 0, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""[Task 2 — MEDIUM] Priya has JEE rank 1300 (GENERAL). Round 1 allotted IIT Kharagpur CS. Round 2 shows IIT Madras CS is available as an upgrade. She must check cutoffs, fill new choices, request upgrade, accept IIT Madras, and pay the fee. Staying at IIT Kharagpur is a mistake. | Rank: 1300 (GENERAL) | Allotment: IIT Kharagpur CS | Steps allowed: 10. Hint: Check cutoffs to confirm IIT Madras is within reach""}
+
+Recent actions (oldest -> newest, JSON array):
+[]
+
+Return the best next action as strict JSON only.","{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}"
+2,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""You qualify for 11 colleges. Best: IIT Bombay CS. Your rank 0 (GENERAL).""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}"
+2,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": true, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Choices submitted for Round 1. Target: IIT Madras CS.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}"
+2,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 2, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Upgrade processed. Round 2. Allotment: None.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": ""IIT Madras CS"", ""round_number"": 2}"
+2,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Madras CS"", ""round_number"": 2}]
+
+Return the best next action as strict JSON only.","{""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}"
+2,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: Cannot pay fee without an allotment!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Madras CS"", ""round_number"": 2}, {""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""report_to_college"", ""target_college"": null, ""round_number"": 1}"
+2,1,0,"Environment state (JSON):
+{""task_id"": 2, ""student_rank"": 1300, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": ""IIT Kharagpur CS"", ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 10, ""available_upgrades"": [], ""steps_taken"": 0, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""[Task 2 — MEDIUM] Priya has JEE rank 1300 (GENERAL). Round 1 allotted IIT Kharagpur CS. Round 2 shows IIT Madras CS is available as an upgrade. She must check cutoffs, fill new choices, request upgrade, accept IIT Madras, and pay the fee. Staying at IIT Kharagpur is a mistake. | Rank: 1300 (GENERAL) | Allotment: IIT Kharagpur CS | Steps allowed: 10. Hint: Check cutoffs to confirm IIT Madras is within reach""}
+
+Recent actions (oldest -> newest, JSON array):
+[]
+
+Return the best next action as strict JSON only.","{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}"
+2,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""Round 1 | Allotted: None | Fee paid: No | Steps left: 7.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}"
+2,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""You qualify for 11 colleges. Best: IIT Bombay CS. Your rank 0 (GENERAL).""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}"
+2,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": true, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Choices submitted for Round 1. Target: IIT Madras CS.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}"
+2,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""ERROR: Fill choices before locking!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}"
+2,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 2, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Upgrade processed. Round 2. Allotment: None.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": ""IIT Madras CS"", ""round_number"": 2}"
+2,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Madras CS"", ""round_number"": 2}]
+
+Return the best next action as strict JSON only.","{""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}"
+2,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: Cannot pay fee without an allotment!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Madras CS"", ""round_number"": 2}, {""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""report_to_college"", ""target_college"": null, ""round_number"": 1}"
+2,2,0,"Environment state (JSON):
+{""task_id"": 2, ""student_rank"": 1300, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": ""IIT Kharagpur CS"", ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 10, ""available_upgrades"": [], ""steps_taken"": 0, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""[Task 2 — MEDIUM] Priya has JEE rank 1300 (GENERAL). Round 1 allotted IIT Kharagpur CS. Round 2 shows IIT Madras CS is available as an upgrade. She must check cutoffs, fill new choices, request upgrade, accept IIT Madras, and pay the fee. Staying at IIT Kharagpur is a mistake. | Rank: 1300 (GENERAL) | Allotment: IIT Kharagpur CS | Steps allowed: 10. Hint: Check cutoffs to confirm IIT Madras is within reach""}
+
+Recent actions (oldest -> newest, JSON array):
+[]
+
+Return the best next action as strict JSON only.","{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}"
+2,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""You qualify for 11 colleges. Best: IIT Bombay CS. Your rank 0 (GENERAL).""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}"
+2,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": true, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Choices submitted for Round 1. Target: IIT Madras CS.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}"
+2,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 2, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Upgrade processed. Round 2. Allotment: None.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""check_status"", ""target_college"": null, ""round_number"": 2}"
+2,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""Round 1 | Allotted: None | Fee paid: No | Steps left: 7.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 2}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}"
+2,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 2}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}"
+2,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: Cannot pay fee without an allotment!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 2}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Madras CS"", ""round_number"": 1}, {""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""report_to_college"", ""target_college"": null, ""round_number"": 1}"
+3,0,0,"Environment state (JSON):
+{""task_id"": 3, ""student_rank"": 550, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": ""IIT Delhi CS"", ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 15, ""available_upgrades"": [], ""steps_taken"": 0, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""[Task 3 — HARD] Arjun has JEE rank 550 (GENERAL). He wants IIT Bombay CS (cutoff 500). Round 1: Gets IIT Delhi CS (his rank just misses Bombay). Round 2: IIT Bombay CS cutoff relaxes — upgrade opportunity. Round 3: Final decision with only 1 day left. Must accept in Round 1 to hold a seat (never leave unallotted), then upgrade strategically in Round 2. This genuinely challenges frontier models. | Rank: 550 (GENERAL) | Allotment: IIT Delhi CS | Steps allowed: 15. Hint: CRITICAL: Accept IIT Delhi in Round 1 — never leave yourself unallotted""}
+
+Recent actions (oldest -> newest, JSON array):
+[]
+
+Return the best next action as strict JSON only.","{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}"
+3,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""Round 1 | Allotted: None | Fee paid: No | Steps left: 7.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}"
+3,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}"
+3,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""You qualify for 11 colleges. Best: IIT Bombay CS. Your rank 0 (GENERAL).""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}"
+3,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": true, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Choices submitted for Round 1. Target: IIT Bombay CS.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}"
+3,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 2, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Upgrade processed. Round 2. Allotment: None.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 2}"
+3,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 2}]
+
+Return the best next action as strict JSON only.","{""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}"
+3,0,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: Cannot pay fee without an allotment!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 2}, {""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""report_to_college"", ""target_college"": null, ""round_number"": 1}"
+3,1,0,"Environment state (JSON):
+{""task_id"": 3, ""student_rank"": 550, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": ""IIT Delhi CS"", ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 15, ""available_upgrades"": [], ""steps_taken"": 0, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""[Task 3 — HARD] Arjun has JEE rank 550 (GENERAL). He wants IIT Bombay CS (cutoff 500). Round 1: Gets IIT Delhi CS (his rank just misses Bombay). Round 2: IIT Bombay CS cutoff relaxes — upgrade opportunity. Round 3: Final decision with only 1 day left. Must accept in Round 1 to hold a seat (never leave unallotted), then upgrade strategically in Round 2. This genuinely challenges frontier models. | Rank: 550 (GENERAL) | Allotment: IIT Delhi CS | Steps allowed: 15. Hint: CRITICAL: Accept IIT Delhi in Round 1 — never leave yourself unallotted""}
+
+Recent actions (oldest -> newest, JSON array):
+[]
+
+Return the best next action as strict JSON only.","{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}"
+3,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""You qualify for 11 colleges. Best: IIT Bombay CS. Your rank 0 (GENERAL).""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}"
+3,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""Round 1 | Allotted: None | Fee paid: No | Steps left: 7.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}"
+3,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}"
+3,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": true, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Choices submitted for Round 1. Target: IIT Bombay CS.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}"
+3,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 2, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Upgrade processed. Round 2. Allotment: None.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 2}"
+3,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 2}]
+
+Return the best next action as strict JSON only.","{""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}"
+3,1,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: Cannot pay fee without an allotment!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 2}, {""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""report_to_college"", ""target_college"": null, ""round_number"": 1}"
+3,2,0,"Environment state (JSON):
+{""task_id"": 3, ""student_rank"": 550, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": ""IIT Delhi CS"", ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 15, ""available_upgrades"": [], ""steps_taken"": 0, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""[Task 3 — HARD] Arjun has JEE rank 550 (GENERAL). He wants IIT Bombay CS (cutoff 500). Round 1: Gets IIT Delhi CS (his rank just misses Bombay). Round 2: IIT Bombay CS cutoff relaxes — upgrade opportunity. Round 3: Final decision with only 1 day left. Must accept in Round 1 to hold a seat (never leave unallotted), then upgrade strategically in Round 2. This genuinely challenges frontier models. | Rank: 550 (GENERAL) | Allotment: IIT Delhi CS | Steps allowed: 15. Hint: CRITICAL: Accept IIT Delhi in Round 1 — never leave yourself unallotted""}
+
+Recent actions (oldest -> newest, JSON array):
+[]
+
+Return the best next action as strict JSON only.","{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}"
+3,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""Round 1 | Allotted: None | Fee paid: No | Steps left: 7.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}"
+3,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}"
+3,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""You qualify for 11 colleges. Best: IIT Bombay CS. Your rank 0 (GENERAL).""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}"
+3,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": true, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Choices submitted for Round 1. Target: IIT Bombay CS.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}"
+3,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""ERROR: Fill choices before locking!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}"
+3,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 2, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.001, ""message"": ""Upgrade processed. Round 2. Allotment: None.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_status"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""accept_allotment"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 2}"
+3,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: No allotment yet. Check status first.""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""accept_allotment"", ""target_college"": null, ""round_number"": 1}, {""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 2}]
+
+Return the best next action as strict JSON only.","{""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}"
+3,2,0,"Environment state (JSON):
+{""task_id"": 1, ""student_rank"": 0, ""student_category"": ""GENERAL"", ""current_round"": 1, ""allotted_college"": null, ""choices_filled"": false, ""seat_fee_paid"": false, ""deadline_days_left"": 7, ""available_upgrades"": [], ""steps_taken"": 1, ""reward"": null, ""done"": null, ""task_score"": 0.25, ""message"": ""ERROR: Cannot pay fee without an allotment!""}
+
+Recent actions (oldest -> newest, JSON array):
+[{""action"": ""check_cutoffs"", ""target_college"": null, ""round_number"": 1}, {""action"": ""fill_choices"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 1}, {""action"": ""lock_choices"", ""target_college"": null, ""round_number"": 1}, {""action"": ""upgrade_request"", ""target_college"": null, ""round_number"": 1}, {""action"": ""accept_allotment"", ""target_college"": ""IIT Bombay CS"", ""round_number"": 2}, {""action"": ""pay_seat_fee"", ""target_college"": null, ""round_number"": 1}]
+
+Return the best next action as strict JSON only.","{""action"": ""report_to_college"", ""target_college"": null, ""round_number"": 1}"

@@ -1,0 +1,10 @@
+policy,task_id,mean_episode_return,std_episode_return,mean_task_score,std_task_score,mean_steps
+random_baseline,1,-9.7,,0.001,,1.0
+trained_model,1,4.499999999999999,,0.25,,1.0
+untrained_model,1,4.499999999999999,,0.25,,1.0
+random_baseline,2,-11.9,,0.001,,1.0
+trained_model,2,4.499999999999999,,0.25,,1.0
+untrained_model,2,4.499999999999999,,0.25,,1.0
+random_baseline,3,-9.5,,0.001,,1.0
+trained_model,3,4.499999999999999,,0.25,,1.0
+untrained_model,3,4.499999999999999,,0.25,,1.0

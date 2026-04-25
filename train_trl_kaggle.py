@@ -26,14 +26,17 @@ pip install -q "unsloth>=2025.1.0" "transformers>=4.46.0" "trl>=0.11.0" \
 from __future__ import annotations
 
 import json
+import locale
 import os
 import random
 import re
 import shutil
+import inspect
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -49,7 +52,9 @@ from transformers import (
     TrainingArguments,
     set_seed,
 )
-from trl import SFTTrainer
+
+if TYPE_CHECKING:
+    from trl import SFTTrainer
 
 try:
     from unsloth import FastLanguageModel, is_bfloat16_supported
@@ -67,12 +72,13 @@ class Config:
     # Environment/API
     base_url: str = os.getenv(
         "COLLEGE_ENV_BASE_URL",
-        "https://Knight09-college-admission-env.hf.space",
+        "https://Knight09-college-env.hf.space",
     ).rstrip("/")
     request_timeout_s: int = int(os.getenv("REQUEST_TIMEOUT_S", "45"))
     request_retries: int = int(os.getenv("REQUEST_RETRIES", "3"))
 
     # Model/Training
+    # Closest small Qwen2.5 instruction model supported well by Unsloth.
     base_model_name: str = os.getenv("BASE_MODEL_NAME", "unsloth/Qwen2.5-1.5B-Instruct-bnb-4bit")
     output_dir: str = os.getenv("OUTPUT_DIR", "./trl_runs/college_env_qwen25_15b_unsloth")
     max_seq_length: int = int(os.getenv("MAX_SEQ_LENGTH", "512"))
@@ -100,6 +106,31 @@ class Config:
 
 
 CFG = Config()
+
+
+def load_sft_trainer_class() -> type:
+    """Load TRL SFTTrainer with a Windows-safe UTF-8 fallback."""
+    # TRL reads some template files using locale default encoding; force UTF-8 on
+    # Windows to avoid cp1252 decode failures in current TRL releases.
+    if os.name == "nt":
+        os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+        os.environ.setdefault("PYTHONUTF8", "1")
+        original_getpreferredencoding = locale.getpreferredencoding
+        original_read_text = Path.read_text
+
+        def _read_text_utf8(self: Path, encoding: Optional[str] = None, errors: Optional[str] = None) -> str:
+            return original_read_text(self, encoding=encoding or "utf-8", errors=errors)
+
+        locale.getpreferredencoding = lambda _do_setlocale=True: "UTF-8"  # type: ignore[assignment]
+        Path.read_text = _read_text_utf8  # type: ignore[assignment]
+        try:
+            from trl import SFTTrainer  # type: ignore[import-not-found]
+            return SFTTrainer
+        finally:
+            locale.getpreferredencoding = original_getpreferredencoding  # type: ignore[assignment]
+            Path.read_text = original_read_text  # type: ignore[assignment]
+    from trl import SFTTrainer  # type: ignore[import-not-found]
+    return SFTTrainer
 
 
 ACTIONS: List[str] = [
@@ -309,7 +340,13 @@ class CollegeHTTPEnv:
             data = self._request(
                 "POST",
                 "/step",
-                {"action": "check_status", "target_college": None, "round_number": marker},
+                {
+                    "action": {
+                        "action": "check_status",
+                        "target_college": None,
+                        "round_number": marker,
+                    }
+                },
             )
             if "observation" not in data:
                 raise ValueError(f"/step task switch missing 'observation': {data}")
@@ -317,17 +354,60 @@ class CollegeHTTPEnv:
         return obs
 
     def step(self, action: Dict[str, Any]) -> Tuple[Dict[str, Any], float, bool]:
-        payload = {
+        action_payload = {
             "action": action["action"],
             "target_college": action.get("target_college"),
             "round_number": action.get("round_number", 1),
         }
-        data = self._request("POST", "/step", payload)
+        wrapped_payload = {"action": action_payload}
+        try:
+            data = self._request("POST", "/step", wrapped_payload)
+        except Exception:
+            # Backward compatibility: some custom servers expect a flat payload.
+            data = self._request("POST", "/step", action_payload)
         if "observation" not in data:
             raise ValueError(f"/step missing 'observation': {data}")
         obs = data["observation"]
         reward = float(data.get("reward", obs.get("reward", 0.0)))
         done = bool(data.get("done", obs.get("done", False)))
+        return obs, reward, done
+
+
+class LocalCollegeEnv:
+    """In-process fallback env when HTTP API is unavailable."""
+
+    def __init__(self) -> None:
+        from models import CollegeAction
+        from server.college_env_environment import CollegeEnvironment
+
+        self._CollegeAction = CollegeAction
+        self._env = CollegeEnvironment()
+
+    @staticmethod
+    def _obs_to_dict(obs_obj: Any) -> Dict[str, Any]:
+        if hasattr(obs_obj, "model_dump"):
+            return obs_obj.model_dump()
+        if hasattr(obs_obj, "dict"):
+            return obs_obj.dict()
+        return dict(obs_obj)
+
+    def healthcheck(self) -> Dict[str, Any]:
+        return {"status": "ok", "mode": "local_inprocess"}
+
+    def reset(self, task_id: int = 1) -> Dict[str, Any]:
+        obs = self._env._reset_for_task(task_id)
+        return self._obs_to_dict(obs)
+
+    def step(self, action: Dict[str, Any]) -> Tuple[Dict[str, Any], float, bool]:
+        act = self._CollegeAction(
+            action=action["action"],
+            target_college=action.get("target_college"),
+            round_number=action.get("round_number", 1),
+        )
+        obs_obj = self._env.step(act)
+        obs = self._obs_to_dict(obs_obj)
+        reward = float(getattr(obs_obj, "reward", obs.get("reward", 0.0)))
+        done = bool(getattr(obs_obj, "done", obs.get("done", False)))
         return obs, reward, done
 
 
@@ -376,7 +456,11 @@ def as_chat_text(tokenizer: AutoTokenizer, prompt: str, response: str) -> str:
         {"role": "assistant", "content": response},
     ]
     if hasattr(tokenizer, "apply_chat_template"):
-        return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)
+        try:
+            return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)
+        except Exception:
+            # Some tokenizers expose apply_chat_template but have no chat_template set.
+            pass
     return (
         f"<|system|>\n{SYSTEM_PROMPT}\n"
         f"<|user|>\n{prompt}\n"
@@ -400,13 +484,22 @@ def build_sft_datasets(tokenizer: AutoTokenizer, df: pd.DataFrame, seed: int) ->
 def infer_lora_targets(model: AutoModelForCausalLM) -> List[str]:
     preferred = {"q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"}
     found: set[str] = set()
+    all_leaf_names: set[str] = set()
     for name, _ in model.named_modules():
         leaf = name.split(".")[-1]
+        all_leaf_names.add(leaf)
         if leaf in preferred:
             found.add(leaf)
     if found:
         return sorted(found)
-    # conservative fallback for GPT-ish variants
+
+    # Fallbacks for GPT-style naming conventions.
+    fallback_order = ["c_attn", "c_proj", "c_fc", "query_key_value", "Wqkv"]
+    fallback_found = [name for name in fallback_order if name in all_leaf_names]
+    if fallback_found:
+        return fallback_found
+
+    # Last-resort conservative fallback for modern decoder-only models.
     return ["q_proj", "v_proj"]
 
 
@@ -605,7 +698,10 @@ def build_model_policy(
             {"role": "user", "content": build_user_prompt(obs, history)},
         ]
         if hasattr(tokenizer, "apply_chat_template"):
-            prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            try:
+                prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            except Exception:
+                prompt = f"<|system|>\n{SYSTEM_PROMPT}\n<|user|>\n{build_user_prompt(obs, history)}\n<|assistant|>\n"
         else:
             prompt = f"<|system|>\n{SYSTEM_PROMPT}\n<|user|>\n{build_user_prompt(obs, history)}\n<|assistant|>\n"
 
@@ -716,13 +812,22 @@ def evaluate_policy(
     return pd.DataFrame(rows), traces
 
 
-def plot_training_loss(log_history: List[Dict[str, Any]], out_path: Path) -> Path:
+def plot_training_loss(
+    log_history: List[Dict[str, Any]],
+    out_path: Path,
+    fallback_train_loss: Optional[float] = None,
+    fallback_steps: int = 1,
+) -> Path:
     train_logs = [x for x in log_history if "loss" in x and "step" in x]
-    if not train_logs:
+    if train_logs:
+        x = [int(item["step"]) for item in train_logs]
+        y = [float(item["loss"]) for item in train_logs]
+    elif fallback_train_loss is not None:
+        # For very short runs (e.g., max_steps=1), trainer may only report aggregate train_loss.
+        x = [0, max(1, int(fallback_steps))]
+        y = [float(fallback_train_loss), float(fallback_train_loss)]
+    else:
         raise ValueError("No training loss logs found in trainer.state.log_history.")
-
-    x = [int(item["step"]) for item in train_logs]
-    y = [float(item["loss"]) for item in train_logs]
 
     plt.figure(figsize=(9, 5))
     plt.plot(x, y, linewidth=1.75, label="Train loss")
@@ -795,7 +900,7 @@ def ensure_hub_inputs(cfg: Config) -> None:
 
 def push_to_hub(
     cfg: Config,
-    trainer: SFTTrainer,
+    trainer: Any,
     tokenizer: AutoTokenizer,
     summary_df: pd.DataFrame,
     eval_df: pd.DataFrame,
@@ -942,14 +1047,20 @@ def main() -> None:
     print(f"Output dir:      {out_dir.resolve()}")
     print("=" * 80)
 
-    env = CollegeHTTPEnv(
+    http_env = CollegeHTTPEnv(
         base_url=CFG.base_url,
         timeout_s=CFG.request_timeout_s,
         retries=CFG.request_retries,
     )
-
-    health = env.healthcheck()
-    print(f"Healthcheck: {health}")
+    try:
+        health = http_env.healthcheck()
+        env: Any = http_env
+        print(f"Healthcheck: {health}")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[WARN] HTTP environment unavailable ({exc}). Falling back to in-process local environment.")
+        env = LocalCollegeEnv()
+        health = env.healthcheck()
+        print(f"Healthcheck: {health}")
 
     # 1) Build demonstrations
     print("\n[1/7] Collecting expert demonstrations ...")
@@ -989,6 +1100,7 @@ def main() -> None:
 
     # 5) Train with TRL SFT + QLoRA
     print("\n[5/7] Training TRL SFT model ...")
+    SFTTrainer = load_sft_trainer_class()
     model_for_training, peft_config = prepare_model_for_training(
         model=model,
         lora_targets=lora_targets,
@@ -1000,12 +1112,19 @@ def main() -> None:
         "model": model_for_training,
         "train_dataset": train_ds,
         "eval_dataset": eval_ds,
-        "tokenizer": tokenizer,
         "args": training_args,
-        "dataset_text_field": "text",
-        "max_seq_length": CFG.max_seq_length,
-        "packing": True,
     }
+    trainer_init_params = inspect.signature(SFTTrainer.__init__).parameters
+    if "tokenizer" in trainer_init_params:
+        trainer_kwargs["tokenizer"] = tokenizer
+    elif "processing_class" in trainer_init_params:
+        trainer_kwargs["processing_class"] = tokenizer
+    if "dataset_text_field" in trainer_init_params:
+        trainer_kwargs["dataset_text_field"] = "text"
+    if "max_seq_length" in trainer_init_params:
+        trainer_kwargs["max_seq_length"] = CFG.max_seq_length
+    if "packing" in trainer_init_params:
+        trainer_kwargs["packing"] = True
     if peft_config is not None:
         trainer_kwargs["peft_config"] = peft_config
     trainer = SFTTrainer(**trainer_kwargs)
@@ -1045,7 +1164,13 @@ def main() -> None:
 
     # 7) Plot curves + push
     print("\n[7/7] Plotting curves and exporting artifacts ...")
-    loss_curve = plot_training_loss(trainer.state.log_history, artifact_dir / "training_loss_curve.png")
+    fallback_loss = train_result.metrics.get("train_loss")
+    loss_curve = plot_training_loss(
+        trainer.state.log_history,
+        artifact_dir / "training_loss_curve.png",
+        fallback_train_loss=float(fallback_loss) if fallback_loss is not None else None,
+        fallback_steps=CFG.max_train_steps,
+    )
     reward_curve, score_bar = plot_eval_curves(eval_df, artifact_dir)
 
     qualitative_path = artifact_dir / "qualitative_traces.txt"
