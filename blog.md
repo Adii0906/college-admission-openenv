@@ -4,6 +4,7 @@
 `college_env` is a simulated version of India’s college counselling process, designed to behave like a real JEE/CUET-style system such as JOSAA or CSAB.
 
 It lets an agent practice the same choices students face during counselling: checking status, understanding cutoffs, filling preference lists, accepting allotments, asking for upgrades, paying fees, and reporting to college.
+this is what we are sloving
 
 ## How it works
 
@@ -79,3 +80,4 @@ OpenEnv gives us a reusable interface that works with different agents and keeps
 `college_env` is a practical environment for studying how AI handles the college counselling process.
 
 It is not just about generating text — it is about planning, prioritizing, and following real-world steps in a high-stakes setting.
+
