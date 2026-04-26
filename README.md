@@ -16,7 +16,7 @@ tags:
 
 # 🎓 College Admission Counselling Environment
 
-[![OpenEnv](https://img.shields.io/badge/OpenEnv-compatible-purple)](https://github.com/meta-pytorch/OpenEnv)
+[![OpenEnv][def]](https://github.com/meta-pytorch/OpenEnv)
 
 Simulates India's **JEE/CUET college admission counselling** (JOSAA/CSAB style).
 1.5 million+ students face this every year. Wrong decisions cost students their dream college.
@@ -89,6 +89,19 @@ Run `python inference.py` to reproduce.
 
 This repo includes TRL training support and trained adapter artifacts under `trl_runs/college_env_qwen25_15b_unsloth/final_adapter`.
 
+### How TRL training works
+The training script (`train_trl_kaggle.py`) uses TRL (Transformer Reinforcement Learning) to fine-tune a language model on the college counselling environment:
+
+1. **Generate datasets**: It runs episodes in the environment, collecting observations and actions. These are formatted into chat-style conversations (system prompt + user observation + assistant action).
+
+2. **Apply LoRA**: Uses PEFT (Parameter-Efficient Fine-Tuning) with LoRA to adapt a base model (like Qwen2.5-1.5B-Instruct) without changing all its weights.
+
+3. **Train with SFT**: Uses TRL's SFTTrainer for supervised fine-tuning on the generated dataset, teaching the model to predict the next counselling action based on the current state.
+
+4. **Save and push**: Saves the trained LoRA adapter. If configured, pushes the adapter and tokenizer to Hugging Face (e.g., `Knight09/college_env`).
+
+This creates a model that can suggest counselling actions when given a student's current situation.
+
 - The model artifacts have been uploaded to `Knight09/college_env` on Hugging Face.
 - `openenv push` uploads the selected files to the HF repo; deployment uses only the files you upload.
 
@@ -119,3 +132,6 @@ python inference.py  # Baseline evaluation
 
 
 *Built for India's first OpenEnv Hackathon — Meta + Hugging Face.*
+
+
+[def]: https://img.shields.io/badge/OpenEnv-compatible-purple
