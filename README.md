@@ -85,6 +85,23 @@ curl -X POST https://Knight09-college-admission-env.hf.space/step \
 
 Run `python inference.py` to reproduce.
 
+## Trained model and Hugging Face
+
+This repo includes TRL training support and trained adapter artifacts under `trl_runs/college_env_qwen25_15b_unsloth/final_adapter`.
+
+- The model artifacts have been uploaded to `Knight09/college_env` on Hugging Face.
+- `openenv push` uploads the selected files to the HF repo; deployment uses only the files you upload.
+
+## Sample prediction
+
+To confirm the trained model works locally, run:
+
+```bash
+python sample_predict.py
+```
+
+That script loads the base model, applies the trained PEFT adapter, and generates a short sample response.
+
 ## Setup
 
 ```bash
@@ -98,5 +115,7 @@ HF_TOKEN     = your_groq_key
 python app.py        # Starts on localhost:7860
 python inference.py  # Baseline evaluation
 ```
+
+
 
 *Built for India's first OpenEnv Hackathon — Meta + Hugging Face.*

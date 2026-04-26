@@ -1,32 +1,33 @@
 # College Admission OpenEnv: How it Works and Why It Matters
 
 ## What is `college_env`?
-`college_env` is an OpenEnv-compatible reinforcement learning environment that simulates India’s college admission counselling process, modeled after JEE/CUET counselling systems like JOSAA and CSAB.
+`college_env` is a simulated version of India’s college counselling process, designed to behave like a real JEE/CUET-style system such as JOSAA or CSAB.
 
-It is built to let AI agents practice decisions that real students must make during multi-round seat allotment: checking status, understanding cutoffs, filling preferences, accepting allotments, requesting upgrades, paying fees, and reporting to college.
+It lets an agent practice the same choices students face during counselling: checking status, understanding cutoffs, filling preference lists, accepting allotments, asking for upgrades, paying fees, and reporting to college.
 
 ## How it works
 
-### 1. OpenEnv HTTP interface
-The environment exposes a standard OpenEnv API with endpoints such as:
+### 1. A simple HTTP interface
+The environment exposes a small OpenEnv HTTP API, so you can interact with it from code or a model.
+
 - `POST /reset` — start a new episode
-- `POST /step` — take one action and receive a new observation
-- `GET /state` — inspect the current state
-- `GET /schema` — action and observation definitions
-- `GET /docs` — Swagger API documentation
+- `POST /step` — take one action and receive the next observation
+- `GET /state` — see the current state
+- `GET /schema` — view action and observation definitions
+- `GET /docs` — open Swagger documentation
 
-This makes it easy to integrate the environment with RL agents, baselines, and model evaluation scripts.
+That makes it easy to plug this environment into reinforcement learning agents, baseline scripts, or evaluation code.
 
-### 2. Task-driven counselling episodes
-The environment defines 3 tasks of increasing complexity:
-- Easy: accept a safe allotment within a short deadline
-- Medium: decide whether to pursue an upgrade over multiple rounds
-- Hard: handle a full multi-round counselling episode with stricter deadlines and more uncertainty
+### 2. Three counselling tasks
+There are three tasks of increasing difficulty:
+- Easy: settle for a safe college within a short deadline
+- Medium: decide whether to chase an upgrade over multiple rounds
+- Hard: manage a longer counselling episode with tighter deadlines and more uncertainty
 
-Each episode begins with a student profile and an initial allotment. The agent must manage actions under a step budget, and the environment returns rewards for progress.
+Each episode starts with a student profile and an initial allotment. The agent has a limited number of moves to reach the best possible outcome.
 
-### 3. Discrete advice and policy actions
-The action space includes counselling actions such as:
+### 3. Real counselling actions
+The action space includes steps that resemble real counselling decisions:
 - `check_status`
 - `check_cutoffs`
 - `fill_choices`
@@ -35,50 +36,46 @@ The action space includes counselling actions such as:
 - `upgrade_request`
 - `pay_seat_fee`
 - `report_to_college`
-- `withdraw` (penalty)
+- `withdraw`
 
-These actions model real decisions students face during admission counselling.
+These are the kinds of choices students and counsellors really make during the admission process.
 
-### 4. Reward shaping and evaluation
-Each action returns a reward signal that guides learning:
-- checking status or cutoffs gives small positive reward
-- filling choices and accepting allotment give moderate reward
-- paying fees and reporting to college give higher rewards
-- withdrawing early is heavily penalized
+### 4. Rewards and evaluation
+The environment gives rewards based on the actions taken:
+- small reward for staying informed (`check_status`, `check_cutoffs`)
+- moderate reward for moving forward (`fill_choices`, `accept_allotment`)
+- larger reward for securing a seat (`pay_seat_fee`, `report_to_college`)
+- heavy penalty for withdrawing early
 
-The environment also computes a task score and episode summary, so agents can be compared against baselines.
+It also produces a task score and an episode summary so different agents can be compared.
 
-## Why this matters in the real world
+## Why this matters
 
 ### Real student impact
-Every year, over 1.5 million Indian students navigate the JEE/CUET counselling process. A single wrong step can mean missing an ideal college or losing a seat entirely.
+Every year, millions of students go through competitive counselling. A wrong decision at the wrong time can mean losing a seat, or even a year of delay.
 
-This environment captures several real-world challenges:
-- strict deadlines and limited rounds
+This environment tries to capture the real pressure of that process:
+- limited rounds and strict deadlines
 - rank-based eligibility and cutoff awareness
-- tradeoffs between safe acceptance and risky upgrades
-- procedural actions like fee payment and reporting
+- choosing between a safe admission and a risky upgrade
+- procedural steps like fee payment and reporting
 
-### AI for education and counselling
-By training agents on `college_env`, researchers can explore how LLMs and RL algorithms reason about multi-step educational decisions.
+### Why AI could help
+Training agents on `college_env` helps us understand how models handle a multi-step decision process instead of just answering a prompt.
 
-Potential real-world applications include:
-- decision support for students during counselling
-- automated guidance systems for admission advisors
-- robustness evaluation of language models on procedural tasks
-- teaching agents to adapt to deadline-driven workflows
+That could lead to tools for:
+- helping students make better counselling choices
+- supporting admission advisors with guidance
+- testing whether models can follow step-by-step workflows
+- teaching AI to respect deadlines and procedures
 
-## Why OpenEnv + RL is a good fit
+## Why OpenEnv and RL?
 
-OpenEnv provides a standard interface for environments designed for language models and reinforcement learning. That means:
-- the same environment can be used by different agents and architectures
-- behaviour can be evaluated consistently across tasks
-- researchers can focus on policies instead of environment plumbing
+OpenEnv gives us a reusable interface that works with different agents and keeps evaluation consistent.
 
-`college_env` is a compact, realistic benchmark that combines procedural decision-making with high-stakes student outcomes.
+`college_env` is designed to be a compact benchmark with a strong educational story: real choices, real deadlines, and real consequences.
 
-## Summary
+## In short
+`college_env` is a practical environment for studying how AI handles the college counselling process.
 
-`college_env` is a practical, education-focused OpenEnv benchmark. It models the JEE/CUET counselling process with a clear action space, multiple tasks, and a reward structure that reflects the real cost of decisions.
-
-This makes it a useful testbed for AI systems that need to plan, prioritize, and follow procedural rules in a real-world educational domain.
+It is not just about generating text — it is about planning, prioritizing, and following real-world steps in a high-stakes setting.
